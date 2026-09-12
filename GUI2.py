@@ -81,6 +81,13 @@ class SmartNurseryFullApp:
 
         self.audio_thread = threading.Thread(target=self.audio_ml_pipeline, daemon=True)
         self.audio_thread.start()
+        
+        # Start Telegram bot
+        telegram_thread = threading.Thread(
+        target=start_bot,
+        daemon=True
+        )
+        telegram_thread.start()
 
     def load_and_diagnose_model(self):
         print("\n" + "="*50)
