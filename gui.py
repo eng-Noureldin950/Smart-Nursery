@@ -350,7 +350,7 @@ class SmartNurseryFullApp:
                     cleaned_audio = nr.reduce_noise(y=audio_chunk, sr=SAMPLE_RATE, prop_decrease=0.7)
 
                     pcm_data = (cleaned_audio * 32767).astype(np.int16).tobytes()
-                    frame_duration = 30
+                    frame_duration = 20
                     frame_size = int(SAMPLE_RATE * (frame_duration / 1000.0) * 2)
 
                     # Strict Sensitivity & Noise Rejection Logic
@@ -400,11 +400,11 @@ class SmartNurseryFullApp:
                                 pred = str(raw_pred).lower().strip()
                                 print(f"[PREDICTION] Raw Output: '{raw_pred}' | Processed: '{pred}'")
 
-                                if any(k in pred for k in ["hung", "food", "milk"]) or pred == "0":
+                                if any(k in pred for k in ["hung", "food", "milk"]) or pred == "1":
                                     self.root.after(0, self.show_hungry)
-                                elif any(k in pred for k in ["tire", "sleep", "bed"]) or pred == "1":
+                                elif any(k in pred for k in ["tire", "sleep", "bed"]) or pred == "2":
                                     self.root.after(0, self.show_tired)
-                                elif any(k in pred for k in ["disc", "pain", "diaper", "belly"]) or pred == "2":
+                                elif any(k in pred for k in ["disc", "pain", "diaper", "belly"]) or pred == "0":
                                     self.root.after(0, self.show_discomfort)
                                 else:
                                     print(f"[WARNING] Unmapped class: '{pred}'")
