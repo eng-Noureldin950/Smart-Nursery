@@ -62,4 +62,4 @@ def send_tired_alert():
 # Start Telegram bot
 def start_bot():
     print("🤖 Telegram bot is starting...")
-    bot.infinity_polling()
+    bot.infinity_polling(skip_pending=True)
