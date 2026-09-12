@@ -210,6 +210,55 @@ class SmartNurseryFullApp:
         ).pack(pady=20)
 
     def extract_features(self, audio_data):
+        # 1. Extract MFCC 
+        mfcc = librosa.feature.mfcc(
+            y=audio_data, 
+            sr=SAMPLE_RATE, 
+            n_mfcc=20, 
+            n_fft=1024, 
+            n_mels=20, 
+            fmin=300, 
+            fmax=600, 
+            center=True
+        )
+        mfcc_mean = np.mean(mfcc, axis=1)
+        mfcc_std = np.std(mfcc, axis=1)
+        # 2. Extract RMS
+        rms = librosa.feature.rms(y=audio_data)
+        rms_mean = np.mean(rms)
+        rms_std = np.std(rms)
+        # 3. Extract Zero Crossing Rate
+        zcr = librosa.feature.zero_crossing_rate(y=audio_data)
+        zcr_mean = np.mean(zcr)
+        zcr_std = np.std(zcr)
+        # 4. Extract Fundamental Frequency (F0 / YIN)
+        f0 = librosa.yin(audio_data, fmin=300, fmax=600, sr=SAMPLE_RATE)
+        f0 = f0[np.isfinite(f0)]  
+        if len(f0) > 0:
+            f0_mean = np.mean(f0)
+            f0_std = np.std(f0)
+            f0_min = np.min(f0)
+            f0_max = np.max(f0)
+        else:
+            f0_mean = 0
+            f0_std = 0
+            f0_min = 0
+            f0_max = 0
+        features = np.hstack([
+            mfcc_mean, 
+            mfcc_std, 
+            rms_mean, 
+            rms_std, 
+            zcr_mean, 
+            zcr_std, 
+            f0_mean, 
+            f0_std, 
+            f0_min, 
+            f0_max
+        ])
+        return features.reshape(1, -1)
+
+    '''def extract_features(self, audio_data):
         mfcc = librosa.feature.mfcc(y=audio_data, sr=SAMPLE_RATE, n_mfcc=20)
         mfcc_mean = np.mean(mfcc.T, axis=0)
         mfcc_std = np.std(mfcc.T, axis=0)
@@ -230,7 +279,7 @@ class SmartNurseryFullApp:
             zcr_mean,
             zcr_std
         ])
-        return features.reshape(1, -1)
+        return features.reshape(1, -1)'''
 
     def _audio_callback(self, indata, frames, time_info, status):
         if status and DEBUG_AUDIO:
