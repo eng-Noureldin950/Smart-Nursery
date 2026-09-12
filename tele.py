@@ -62,4 +62,10 @@ def send_tired_alert():
 # Start Telegram bot
 def start_bot():
     print("🤖 Telegram bot is starting...")
-    bot.infinity_polling(skip_pending=True)
+
+    try:
+        bot.infinity_polling(skip_pending=True)
+
+    except Exception as e:
+        print("❌ Telegram bot stopped!")
+        print("Error:", e)
