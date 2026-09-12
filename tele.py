@@ -1,5 +1,4 @@
 import telebot
-import threading
 from config import API_TOKEN
 
 bot = telebot.TeleBot(API_TOKEN)
@@ -13,6 +12,7 @@ def welcome(message):
     users.add(chat_id)
 
     print(f"User registered: {chat_id}")
+    print(f"Current users: {users}")
 
     bot.send_message(
         chat_id,
@@ -59,14 +59,5 @@ def send_tired_alert():
             print("Telegram send failed:", e)
 
 
-def start_bot():
-    bot.infinity_polling()
-
-
-# Start Telegram polling in background
-telegram_thread = threading.Thread(
-    target=start_bot,
-    daemon=True
-)
-
-telegram_thread.start()
+print("Bot is starting...")
+bot.infinity_polling()
