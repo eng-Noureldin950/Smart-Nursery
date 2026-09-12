@@ -3,37 +3,45 @@ from config import API_TOKEN
 
 bot = telebot.TeleBot(API_TOKEN)
 
-CHAT_ID = 123456789
+# Store users who started the bot
+users = set()
 
+#starting the bot 
 
-def send_message(message):
-    bot.send_message(CHAT_ID, message)
+@bot.message_handler(commands=["start"])
+def welcome(message):
 
+    # Add this user's chat ID
+    users.add(message.chat.id)
+
+    bot.send_message(
+        message.chat.id,
+        f"Hello {message.from_user.first_name}! 👋\n"
+        "Welcome to Smart Nursery Guardian."
+    )
 
 def send_gas_alert():
-    send_message(
-        "🚨 SAFETY ALERT!\n"
-        "Gas or smoke has been detected in the nursery."
-    )
+    text = "🚨 URGENT SAFETY ALERT: Smoke or Gas detected in the nursery room!"
+
+    try:
+        bot.send_message(CHAT_ID, text)
+    except Exception as e:
+        print("Telegram send failed:", e)
 
 
 def send_hungry_alert():
-    send_message(
-        "👶 Baby Cry Detected\n"
-        "Classification: Hungry"
-    )
+    text = "👶 Baby is hungry!"
+
+    try:
+        bot.send_message(CHAT_ID, text)
+    except Exception as e:
+        print("Telegram send failed:", e)
 
 
 def send_tired_alert():
-    send_message(
-        "👶 Baby Cry Detected\n"
-        "Classification: Tired\n"
-        "⚠️ Attention required."
-    )
+    text = "👶 Baby is tired! ⚠️ Attention required."
 
-
-def send_temperature_alert(temp):
-    send_message(
-        f"🌡️ HIGH TEMPERATURE ALERT!\n"
-        f"Nursery temperature: {temp}°C"
-    )
+    try:
+        bot.send_message(CHAT_ID, text)
+    except Exception as e:
+        print("Telegram send failed:", e)
