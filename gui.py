@@ -6,7 +6,6 @@ import os
 import queue
 import cv2
 from PIL import Image, ImageTk
-import requests
 import serial
 import serial.tools.list_ports
 import numpy as np
@@ -16,7 +15,7 @@ import joblib
 import librosa
 import webrtcvad
 import noisereduce as nr
-
+from tele import send_gas_alert, send_hungry_alert, send_tired_alert
 # =====================================================================
 # 1. CONFIGURATION & FILE PATHS
 # =====================================================================
@@ -434,7 +433,8 @@ class SmartNurseryFullApp:
     def show_hungry(self):
         self.msg_label.config(text="Status: Baby is Hungry! Playing soothing video...")
         self.play_calming_video(CALMING_VIDEO_PATH)
-
+        #Telegram hungry alert 
+        send_hungry_alert()
     def show_tired(self):
         self.stop_video()
         self.msg_label.config(
@@ -442,7 +442,8 @@ class SmartNurseryFullApp:
             fg="#C0392B", font=("Arial", 15, "bold")
         )
         self.send_serial("BUZZER_ON\n")
-
+        #Telegram tired alert
+        send_tired_alert()
     def show_discomfort(self):
         self.stop_video()
         self.msg_label.config(
@@ -488,22 +489,15 @@ class SmartNurseryFullApp:
         if not self.gas_alert_active:
             self.gas_alert_active = True
             self.alert_frame.place(relx=0, rely=0, relwidth=1, relheight=1)
-            threading.Thread(target=self.send_telegram_alert, daemon=True).start()
+            #Sending telegram gas alert 
+            threading.Thread(
+            target=send_gas_alert,
+            daemon=True
+        ).start()
 
     def dismiss_gas_alert(self):
         self.gas_alert_active = False
         self.alert_frame.place_forget()
-
-    def send_telegram_alert(self):
-        if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
-            print("Telegram not configured (set NURSERY_TG_TOKEN / NURSERY_TG_CHAT).")
-            return
-        text = "🚨 URGENT SAFETY ALERT: Smoke or Gas detected in the nursery room!"
-        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-        try:
-            requests.post(url, data={"chat_id": TELEGRAM_CHAT_ID, "text": text}, timeout=5)
-        except Exception as e:
-            print("Telegram send failed:", e)
 
     def send_serial(self, cmd):
         if self.ser and self.ser.is_open:
