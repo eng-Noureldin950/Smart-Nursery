@@ -45,6 +45,12 @@ DEBUG_AUDIO = os.environ.get("NURSERY_DEBUG", "1") == "1"
 
 class SmartNurseryFullApp:
     def __init__(self, root):
+        # Start Telegram bot
+        telegram_thread = threading.Thread(
+        target=start_bot,
+        daemon=True
+        )
+        telegram_thread.start()
         self.root = root
         self.root.title("Smart Nursery Guardian - GUI & Control Hub")
         self.root.geometry("850x700")
@@ -82,12 +88,7 @@ class SmartNurseryFullApp:
         self.audio_thread = threading.Thread(target=self.audio_ml_pipeline, daemon=True)
         self.audio_thread.start()
         
-        # Start Telegram bot
-        telegram_thread = threading.Thread(
-        target=start_bot,
-        daemon=True
-        )
-        telegram_thread.start()
+
 
     def load_and_diagnose_model(self):
         print("\n" + "="*50)
