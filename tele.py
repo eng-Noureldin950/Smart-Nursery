@@ -61,5 +61,5 @@ def send_tired_alert():
 
 # Start Telegram bot
 def start_bot():
-    print("Bot is starting...")
+    print("🤖 Telegram bot is starting...")
     bot.infinity_polling()
