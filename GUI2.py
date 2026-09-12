@@ -15,16 +15,8 @@ import joblib
 import librosa
 import webrtcvad
 import noisereduce as nr
-#from tele import send_gas_alert, send_hungry_alert, send_tired_alert
+from tele import send_gas_alert, send_hungry_alert, send_tired_alert
 
-def send_gas_alert():
-    print("[TEST] Gas alert")
-
-def send_hungry_alert():
-    print("[TEST] Hungry alert")
-
-def send_tired_alert():
-    print("[TEST] Tired alert")
 # =====================================================================
 # 1. CONFIGURATION & FILE PATHS
 # =====================================================================
