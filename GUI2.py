@@ -15,7 +15,7 @@ import joblib
 import librosa
 import webrtcvad
 import noisereduce as nr
-from tele import send_gas_alert, send_hungry_alert, send_tired_alert
+from tele import send_gas_alert, send_hungry_alert, send_tired_alert,stat_bot
 
 # =====================================================================
 # 1. CONFIGURATION & FILE PATHS
